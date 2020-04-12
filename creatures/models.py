@@ -22,6 +22,8 @@ class Creature(models.Model):
     hp = models.IntegerField(default=0)
     ac = models.IntegerField(default=0)
     status = models.CharField(max_length=13, choices=CreatureStatus.choices, blank=True)
+    secondary_status = models.CharField(max_length=13, choices=CreatureStatus.choices, blank=True)
+    tertiary_status = models.CharField(max_length=13, choices=CreatureStatus.choices, blank=True)
     conscious = models.BooleanField(default=True)
 
     def __str__(self):
