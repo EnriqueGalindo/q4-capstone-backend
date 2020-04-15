@@ -14,8 +14,8 @@ class CreatureViewSet(viewsets.ModelViewSet):
     serializer_class = CreatureSerializer
     def perform_create(self, serializer):
         if serializer and serializer.validated_data.get("hp"):
-            original_hp = serializer.validated_data["hp"]
-        serializer.save(original_hp=original_hp)
+            max_hp = serializer.validated_data["hp"]
+        serializer.save(max_hp=max_hp)
 
 class EncountersViewSet(viewsets.ModelViewSet):
     queryset = Encounters.objects.all()
@@ -25,7 +25,7 @@ class EncountersViewSet(viewsets.ModelViewSet):
     def reset_encounter(self, request, pk=None):
         encounter = self.get_object()
         for creature in encounter.creatures.all():
-            creature.hp = creature.original_hp
+            creature.hp = creature.max_hp
             creature.status = ""
             creature.secondary_status = ""
             creature.tertiary_status = ""
