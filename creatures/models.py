@@ -20,6 +20,7 @@ class Creature(models.Model):
 
     name = models.CharField(max_length=50)
     hp = models.IntegerField(default=0)
+    original_hp = models.IntegerField(default=0)
     ac = models.IntegerField(default=0)
     status = models.CharField(max_length=13, choices=CreatureStatus.choices, blank=True)
     secondary_status = models.CharField(max_length=13, choices=CreatureStatus.choices, blank=True)

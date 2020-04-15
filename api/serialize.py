@@ -4,7 +4,7 @@ from creatures.models import Creature
 from encounters.models import Encounters
 from user.models import DnDUser
 
-class CreatureSerializer(serializers.ModelSerializer):
+class CreatureSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Creature
         fields = [
@@ -17,7 +17,7 @@ class CreatureSerializer(serializers.ModelSerializer):
         ]
 
 
-class EncountersSerializer(serializers.ModelSerializer):
+class EncountersSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Encounters
         fields = [
@@ -29,7 +29,7 @@ class EncountersSerializer(serializers.ModelSerializer):
         ]
 
 
-class UserSerializer(serializers.ModelSerializer):
+class UserSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = DnDUser
         fields = [
