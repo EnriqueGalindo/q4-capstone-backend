@@ -24,7 +24,7 @@ class EncountersViewSet(viewsets.ModelViewSet):
     @action(detail=True, methods=['get'])
     def reset_encounter(self, request, pk=None):
         encounter = self.get_object()
-        for creature in encounter.creature.all():
+        for creature in encounter.creatures.all():
             creature.hp = creature.max_hp
             creature.status = ""
             creature.secondary_status = ""
