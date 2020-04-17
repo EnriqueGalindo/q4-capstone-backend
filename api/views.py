@@ -80,8 +80,6 @@ class EncountersViewSet(viewsets.ModelViewSet):
         creatures = request.data['creatures']
         encounter = None
 
-        print('update')
-
         try:
             encounter = Encounters.objects.get(pk=pk)
             encounter.title = request.data['title']
