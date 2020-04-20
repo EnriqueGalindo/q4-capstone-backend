@@ -13,6 +13,10 @@ from api.serialize import CreatureSerializer, EncountersSerializer, UserSerializ
 class CreatureViewSet(viewsets.ModelViewSet):
     queryset = Creature.objects.all()
     serializer_class = CreatureSerializer
+    def perform_create(self, serializer):
+        if serializer and serializer.validated_data.get('hp'):
+            max_hp = serializer.validated_data['hp']
+        serializer.save(max_hp=max_hp)
 
     def perform_create(self, serializer):
         if serializer and serializer.validated_data.get("hp"):
@@ -22,6 +26,7 @@ class CreatureViewSet(viewsets.ModelViewSet):
 class EncountersViewSet(viewsets.ModelViewSet):
     queryset = Encounters.objects.all()
     serializer_class = EncountersSerializer
+
 
     def retrieve(self, request, pk=None):
         encounter = None
@@ -128,6 +133,7 @@ class EncountersViewSet(viewsets.ModelViewSet):
         
         return Response({'deleted': pk})
 
+
     @action(detail=True, methods=['get'])
     def reset_encounter(self, request, pk=None):
         encounter = self.get_object()
@@ -140,7 +146,8 @@ class EncountersViewSet(viewsets.ModelViewSet):
             creature.save()
 
         return Response({'status': 'creatures reset'})
-        
+
 class UserViewSet(viewsets.ModelViewSet):
     queryset = DnDUser.objects.all()
     serializer_class = UserSerializer
+
