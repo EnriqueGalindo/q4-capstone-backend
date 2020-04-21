@@ -13,6 +13,8 @@ class CreatureSerializer(serializers.HyperlinkedModelSerializer):
             'hp',
             'ac',
             'status',
+            'secondary_status',
+            'tertiary_status',
             'conscious'
         ]
 

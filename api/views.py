@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from rest_framework import viewsets
+from rest_framework import viewsets, status
 from rest_framework.decorators import action
 from rest_framework.response import Response
 
@@ -29,7 +29,8 @@ class EncountersViewSet(viewsets.ModelViewSet):
         try:
             encounter = hydrateEncounter(Encounters.objects.get(pk=pk))
         except Exception as e:
-            return Response({'error': f'{e}'})
+            # HTTP_500_INTERNAL_SERVER_ERROR
+            return Response(status=status.HTTP_404_NOT_FOUND)
 
         return Response(encounter)
     
@@ -38,7 +39,7 @@ class EncountersViewSet(viewsets.ModelViewSet):
         try:
             encounters = [hydrateEncounter(e) for e in Encounters.objects.all()]
         except Exception as e:
-            return Response({'error': e})
+            return Response(status=status.HTTP_404_NOT_FOUND)
         
         return Response(encounters)
     
