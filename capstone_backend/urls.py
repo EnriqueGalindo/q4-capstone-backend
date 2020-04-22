@@ -22,9 +22,9 @@ from rest_framework import routers
 router = routers.DefaultRouter()
 router.register(r'creatures', views.CreatureViewSet)
 router.register(r'encounters', views.EncountersViewSet)
-router.register(r'user', views.UserViewSet)
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('api/', include(router.urls))
+    path('api/errors', views.EmptyViewSet.as_view()),
+    path('api/', include(router.urls)),
 ]

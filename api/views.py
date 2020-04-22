@@ -1,14 +1,15 @@
 from django.shortcuts import render
-from rest_framework import viewsets, status
+from rest_framework import viewsets, status, permissions
+from rest_framework.views import APIView
 from rest_framework.decorators import action
 from rest_framework.response import Response
 
 from creatures.models import Creature
 from encounters.models import Encounters
 from encounters.utils import hydrateEncounter
-from user.models import DnDUser
+# from user.models import DnDUser
 
-from api.serialize import CreatureSerializer, EncountersSerializer, UserSerializer
+from api.serialize import CreatureSerializer, EncountersSerializer #UserSerializer
 
 
 class CreatureViewSet(viewsets.ModelViewSet):
@@ -38,11 +39,10 @@ class EncountersViewSet(viewsets.ModelViewSet):
     def list(self, request):
         encounters = None
         try:
-            encounters = [hydrateEncounter(e)
-                          for e in Encounters.objects.all()]
-        except Exception:
+            encounters = [hydrateEncounter(e) for e in Encounters.objects.all()]
+        except Exception as e:
             return Response(status=status.HTTP_404_NOT_FOUND)
-
+        
         return Response(encounters)
 
     # First we grag the encounter title from the request,
@@ -143,11 +143,14 @@ class EncountersViewSet(viewsets.ModelViewSet):
         return Response({'status': 'creatures reset'})
 
 
-class UserViewSet(viewsets.ModelViewSet):
-    queryset = DnDUser.objects.all()
-    serializer_class = UserSerializer
+# class UserViewSet(viewsets.ModelViewSet):
+#     queryset = DnDUser.objects.all()
+#     serializer_class = UserSerializer
 
 
-def exception_error_view(self):
-    content = {'500 Error'}
-    return Response(content, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+class EmptyViewSet(APIView):
+    def get(self, reqeust):
+        return Response(status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+    
+    def post(self, request):
+        return Response(status=status.HTTP_500_INTERNAL_SERVER_ERROR)
