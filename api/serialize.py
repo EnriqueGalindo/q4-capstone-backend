@@ -2,7 +2,7 @@ from rest_framework import serializers
 
 from creatures.models import Creature
 from encounters.models import Encounters
-from user.models import DnDUser
+# from user.models import DnDUser
 
 class CreatureSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
@@ -31,12 +31,12 @@ class EncountersSerializer(serializers.HyperlinkedModelSerializer):
         ]
 
 
-class UserSerializer(serializers.HyperlinkedModelSerializer):
-    class Meta:
-        model = DnDUser
-        fields = [
-            'id',
-            'username',
-            'name',
-            'email'
-        ]
+# class UserSerializer(serializers.HyperlinkedModelSerializer):
+#     class Meta:
+#         model = DnDUser
+#         fields = [
+#             'id',
+#             'username',
+#             'name',
+#             'email'
+#         ]

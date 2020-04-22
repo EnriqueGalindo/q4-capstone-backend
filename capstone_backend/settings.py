@@ -11,6 +11,8 @@ https://docs.djangoproject.com/en/3.0/ref/settings/
 """
 
 import os
+from dotenv import load_dotenv
+load_dotenv()
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -20,7 +22,8 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/3.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'f!-)(2@#eg&lx0z4t8l#1^@j4cb0a61%&+oi1%r21ble7mrn)l'
+# print(os.environ)
+SECRET_KEY = os.environ['SECRET_KEY']
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -40,7 +43,6 @@ INSTALLED_APPS = [
     'rest_framework',
     'corsheaders',
     'capstone_backend',
-    'user.apps.UserConfig',
     'creatures.apps.CreaturesConfig',
     'encounters.apps.EncountersConfig',
     'api.apps.ApiConfig'
@@ -131,4 +133,4 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
-AUTH_USER_MODEL = 'user.DnDUser'
+# AUTH_USER_MODEL = 'user.DnDUser'

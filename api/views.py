@@ -1,14 +1,16 @@
 from django.shortcuts import render
-from rest_framework import viewsets, status
+from rest_framework import viewsets, status, permissions
+from rest_framework.views import APIView
 from rest_framework.decorators import action
 from rest_framework.response import Response
 
 from creatures.models import Creature
 from encounters.models import Encounters
 from encounters.utils import hydrateEncounter
-from user.models import DnDUser
+# from user.models import DnDUser
 
-from api.serialize import CreatureSerializer, EncountersSerializer, UserSerializer
+from api.serialize import CreatureSerializer, EncountersSerializer #UserSerializer
+
 
 class CreatureViewSet(viewsets.ModelViewSet):
     queryset = Creature.objects.all()
@@ -19,6 +21,7 @@ class CreatureViewSet(viewsets.ModelViewSet):
             max_hp = serializer.validated_data["hp"]
         serializer.save(max_hp=max_hp)
 
+
 class EncountersViewSet(viewsets.ModelViewSet):
     queryset = Encounters.objects.all()
     serializer_class = EncountersSerializer
@@ -28,12 +31,11 @@ class EncountersViewSet(viewsets.ModelViewSet):
 
         try:
             encounter = hydrateEncounter(Encounters.objects.get(pk=pk))
-        except Exception as e:
-            # HTTP_500_INTERNAL_SERVER_ERROR
+        except Exception:
             return Response(status=status.HTTP_404_NOT_FOUND)
 
         return Response(encounter)
-    
+
     def list(self, request):
         encounters = None
         try:
@@ -42,9 +44,9 @@ class EncountersViewSet(viewsets.ModelViewSet):
             return Response(status=status.HTTP_404_NOT_FOUND)
         
         return Response(encounters)
-    
+
     # First we grag the encounter title from the request,
-    # Then we grab the creature information from the encounter 
+    # Then we grab the creature information from the encounter
     # and create a new creature in the database for each one of them
     # Then we create the encounter and add that list as the creatures
     def create(self, request):
@@ -69,11 +71,11 @@ class EncountersViewSet(viewsets.ModelViewSet):
 
                 newCreature.save()
                 encounter.creatures.add(newCreature)
-        
+
         encounter.save()
 
         return Response(hydrateEncounter(encounter))
-    
+
     # We need to figure out which creatures already exist and update them
     # otherwise we create the creatures that were added then add them to
     # the encounter
@@ -112,21 +114,19 @@ class EncountersViewSet(viewsets.ModelViewSet):
 
             encounter.save()
 
-        except Exception as e:
-            print(e)
-            return Response({'error': f'{e}'})
+        except Exception:
+            return Response(status=status.HTTP_404_NOT_FOUND)
 
         return Response(hydrateEncounter(encounter))
-    
+
     def destroy(self, request, pk=None):
         try:
             encounter = Encounters.objects.get(pk=pk)
             encounter.creatures.all().delete()
             encounter.delete()
-        except Exception as e:
-            print(e)
-            return Response({'error': f'{e}'})
-        
+        except Exception:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+
         return Response({'deleted': pk})
 
     @action(detail=True, methods=['get'])
@@ -141,7 +141,16 @@ class EncountersViewSet(viewsets.ModelViewSet):
             creature.save()
 
         return Response({'status': 'creatures reset'})
-        
-class UserViewSet(viewsets.ModelViewSet):
-    queryset = DnDUser.objects.all()
-    serializer_class = UserSerializer
+
+
+# class UserViewSet(viewsets.ModelViewSet):
+#     queryset = DnDUser.objects.all()
+#     serializer_class = UserSerializer
+
+
+class EmptyViewSet(APIView):
+    def get(self, reqeust):
+        return Response(status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+    
+    def post(self, request):
+        return Response(status=status.HTTP_500_INTERNAL_SERVER_ERROR)
